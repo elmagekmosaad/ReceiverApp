@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to ReceiverApp</h1>
+
+    <button id="request-permission" class="btn btn-primary mt-2 text-center" style="display:none;">Request Notification Permission</button>
+    <button id="get-token" class="btn btn-secondary mt-2 text-center" style="display:none;">Get Token</button>
+
+    <div class="mt-4">
+        <h4>FCM Token:</h4>
+        <p id="fcm-token">Loading...</p>
+    </div>
+
+    <h2 class="mt-5">Received Notifications:</h2>
+    <div id="notifications"></div>
+</div>
+
