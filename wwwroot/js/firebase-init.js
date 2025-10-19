@@ -7,7 +7,6 @@ const firebaseConfig = {
     messagingSenderId: "1081156835593",
     appId: "1:1081156835593:web:6681d831783ce25fdedbd8",
     measurementId: "G-E6LFN9PNK1",
-    vapidKey: "BF_zJcpJG7EY512TaMGhWpZqNubxp4qBh0y4ABQp4Ev3HnDCkRgZ-yvdme9X3Da-NiEGsyko_GWVoSSIvwWl1Es"
 };
 
 // Initialize Firebase

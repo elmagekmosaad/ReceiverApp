@@ -3,13 +3,21 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to ReceiverApp</h1>
+    <h1 class="display-4">ReceiverApp</h1>
 
-    <button id="request-permission" class="btn btn-primary mt-2 text-center" style="display:none;">Request Notification Permission</button>
-    <button id="get-token" class="btn btn-secondary mt-2 text-center" style="display:none;">Get Token</button>
+    <div class="text-center">
+        <button id="request-permission" class="btn btn-primary mt-2" style="display:none;">Request Notification Permission</button>
+        <button id="get-token" class="btn btn-secondary mt-2" style="display:none;">Get Token</button>
+    </div>
+
+    <div class="text-center">
+        <form id="subscripeForm">
+            <button type="submit" id="subscripe" class="btn btn-primary mt-2">Subscripe</button>
+        </form>
+    </div>
 
     <div class="mt-4">
-        <h4>FCM Token:</h4>
+        <h4>FCM Device Token:</h4>
         <p id="fcm-token">Loading...</p>
     </div>
 
@@ -17,3 +25,140 @@
     <div id="notifications"></div>
 </div>
 
+<hr />
+<h1>Send Notification</h1>
+
+<form id="notificationForm">
+    <div class="form-group">
+        <label for="deviceToken">Device Token:</label>
+        <input type="text" class="form-control" id="deviceToken" name="deviceToken" required>
+    </div>
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+    <div class="form-group">
+        <label for="body">Body:</label>
+        <input type="text" class="form-control" id="body" name="body" required>
+    </div>
+    <button type="submit" class="btn btn-primary m-2">Send Notification</button>
+    <button type="button" id="sentToAll" class="btn btn-primary mt-2">Send To All</button>
+</form>
+
+<div id="responseMessage"></div>
+
+<script>
+     document.addEventListener('DOMContentLoaded', function () {
+    
+
+    document.getElementById('notificationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('/Home/SendFromReceiver', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Failed to send notification');
+                }
+            })
+            .then(data => {
+                document.getElementById('responseMessage').innerHTML =
+                    '<div class="alert alert-success">sent!</div>';
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').innerHTML =
+                    '<div class="alert alert-danger">error.</div>';
+            });
+    });
+
+    document.getElementById('sentToAll').addEventListener('click', function(e) {
+        e.preventDefault();
+
+    const form = document.getElementById('notificationForm');
+    const formData = new FormData(form);
+
+        fetch('/Home/SendFromReceiverToAll', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Failed to send notification');
+                }
+            })
+            .then(data => {
+                document.getElementById('responseMessage').innerHTML =
+                    '<div class="alert alert-success">sent To All!</div>';
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').innerHTML =
+                    '<div class="alert alert-danger">error.</div>';
+            });
+    });
+
+    document.getElementById('subscripeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        let deviceToken = document.getElementById('fcm-token').innerText;
+        formData.append("deviceToken", deviceToken)
+        formData.append("topic","mg")
+
+        fetch('/Home/SubscripeToTopic', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Failed to send notification');
+                }
+            })
+            .then(data => {
+                document.getElementById('responseMessage').innerHTML =
+                    '<div class="alert alert-success">subscribed</div>';
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').innerHTML =
+                    '<div class="alert alert-danger">error.</div>';
+            });
+    });
+
+    
+
+});
+</script>
+@*<form asp-controller="Home" asp-action="SendFromReceiver" method="post">
+    <div class="form-group">
+        <label for="deviceToken">Device Token:</label>
+        <input type="text" class="form-control" id="deviceToken" name="deviceToken" required>
+    </div>
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+    <div class="form-group">
+        <label for="body">Body:</label>
+        <input type="text" class="form-control" id="body" name="body" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Send Notification</button>
+</form>*@
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+}
+
+@if (ViewBag.Success != null)
+{
+    <div class="alert alert-success mt-3">@ViewBag.Success</div>
+}
